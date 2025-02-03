@@ -1,0 +1,30 @@
+Task: 
+Online Kitab Satış, 
+models-User,Author,Book(elave ola biler sizin yazdiginiz koddan asilidir esas bunlardi),+
+User endpoint- 
+/api/users/register
+
+/api/users/login
+
+/api/users/profile
+
+Author endpoints-
+/api/authors- post ( new author),
+/api/authors-get(all authors),
+/api/authors/:id- get(one author),
+/api/authors/:id- put(update),
+/api/authors/:id-delete
+Book endpoints-
+/api/books -post (new book),
+/api/books- get(all books),
+/api/books/:id-get(one book),
+/api/books/:id- put (update),
+/api/books/:id- delete,
+Order endpoints-
+/api/orders- post (kitab sifaris et)
+
+User- id,name,email,password
+Author-id, name, bio
+Book-id, title,price,stock,soldCount,
+
+error handlingi yaz! admin role lazim olsa yaz!
