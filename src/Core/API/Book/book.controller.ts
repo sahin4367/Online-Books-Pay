@@ -2,6 +2,8 @@ import { Request,Response,NextFunction } from "express";
 import { BookDTO } from "./book.dto";
 import { Book } from "../../../DAL/models/book.model";
 import { title } from "process";
+import { Order } from "../../../DAL/models/order.model";
+import { In } from "typeorm";
 
 interface UpdateBookDTO {
     title  : string;
@@ -13,18 +15,11 @@ interface UpdateBookDTO {
 const createBook = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
     try {
         const {title,price,stock,soldCount} = req.body;
-        if (!title||!price||!stock||!soldCount) {
-            res.status(400).json({
-                message : `Melumatlari daxil et!`
-            })
+        if (!title || !price || !stock || !soldCount ) {
+            res.status(400).json({message : `Butun melumatlari daxil et!`});
             return;
         }
-        const dto = new BookDTO();
-        dto.title  = title;
-        dto.price = price;
-        dto.stock = stock;
-        dto.soldCount = soldCount;
-
+        
         const book = new Book();
         book.title = title;
         book.price = price;
@@ -32,7 +27,7 @@ const createBook = async(req:Request,res:Response,next:NextFunction):Promise<voi
         book.soldCount = soldCount;
 
         const savedBook = await Book.save(book);
-        res.status(200).json(savedBook);
+        res.status(201).json(savedBook);
     } catch (error) {
         next(error);
     }
@@ -40,7 +35,9 @@ const createBook = async(req:Request,res:Response,next:NextFunction):Promise<voi
 
 const listBook = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
     try {
-        const books = await Book.find();
+        const books = await Book.find({
+            relations : ["orders"]
+        });
         res.status(200).json(books);
     } catch (error) {
         next(error);
@@ -51,7 +48,8 @@ const listBookId = async(req:Request,res:Response,next:NextFunction):Promise<voi
     try {
         const bookId = Number(req.params.id);
         const book = await Book.findOne({
-            where : {id : bookId}
+            where : {id : bookId},
+            relations : ["orders"]
         })
         if (!book) {
             res.status(404).json({

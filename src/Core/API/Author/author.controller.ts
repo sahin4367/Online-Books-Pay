@@ -1,7 +1,8 @@
 import { Request,Response,NextFunction } from "express";
-import { AuthorDTO } from "./author.dto";
 import { Author } from "../../../DAL/models/author.model";
 import { Book } from "../../../DAL/models/book.model";
+import { AuthorDTO } from "./author.dto";
+import { In } from "typeorm";
 
 interface UpdateAuthorDTO {
     name : string;
@@ -10,21 +11,32 @@ interface UpdateAuthorDTO {
 
 const createAuthor = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
     try {
-        const {name,bio} = req.body;
-        if (!name || !bio) {
-            res.status(400).json({
-                message : `Butun melumatlari ver!!`,
-            })
+        const {name,bio,book_list_id} = req.body;
+        if (!name || !bio || !book_list_id) {
+            res.status(400).json({message : `Butun melumatlari daxil et!`});
+            return;
+        }
+
+        const book_list = await Book.find({
+            where : {
+                id : In(req.body.book_list_id)
+            }
+        });
+
+        if (book_list.length === 0) {
+            res.status(400).json({message : `Book list empty!`});
             return;
         }
 
         const dto = new AuthorDTO();
         dto.name = name;
         dto.bio = bio;
+        dto.book_list_id = book_list_id;
 
         const author = new Author();
-        author.name  = name;
+        author.name = name;
         author.bio = bio;
+        author.books = book_list;
 
         const savedAuthor = await Author.save(author);
         res.status(201).json(savedAuthor);

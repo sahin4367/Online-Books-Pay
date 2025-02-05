@@ -1,5 +1,3 @@
-// import paypal from "paypal-rest-sdk";
-
 import 'dotenv/config'
 
 export const appConfig = {
@@ -16,9 +14,3 @@ export const appConfig = {
     Database: process.env.DB_NAME,
 };
 
-
-// export const paypalConfig = {
-//     mode : process.env.PAYPAL_MODE || "sandbox",
-//     client_id : process.env.PAYPAL_CLIENT_ID!,
-//     client_secret : process.env.PAYPAL_SECRET_KEY!,
-// }

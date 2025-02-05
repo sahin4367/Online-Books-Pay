@@ -1,8 +1,7 @@
 import { Request,Response,NextFunction } from "express";
-import { User } from "../../../DAL/models/user.model";
 import { Book } from "../../../DAL/models/book.model";
 import { ESatus, Order } from "../../../DAL/models/order.model";
-
+import { User } from "../../../DAL/models/user.model";
 
 
 const createOrder = async (req:Request,res:Response,next : NextFunction):Promise<void> => {
@@ -35,7 +34,6 @@ const createOrder = async (req:Request,res:Response,next : NextFunction):Promise
 
         const order = new Order();
         order.users = user;
-        order.books = book;
         order.quantity = quantity;
         order.totalPrice = totalPrice;
         order.status = ESatus.PENDING;

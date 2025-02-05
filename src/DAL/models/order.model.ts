@@ -26,10 +26,6 @@ export class Order extends BaseEntity {
     @JoinColumn({name : "user_id"})
     users : User;
 
-    @ManyToOne(() => Book , book => book.orders , {onDelete: "CASCADE"})
-    @JoinColumn({name : "book_id"})
-    books : Book
-
     @OneToMany(() => Payment , payment => payment.orders)
     payments : Payment[];
 }

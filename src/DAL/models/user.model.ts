@@ -2,6 +2,10 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "t
 import { Order } from "./order.model";
 import { Payment } from "./payment.model";
 
+export enum UserRole {
+    USER = "user",
+    ADMIN = "admin"
+}
 
 @Entity ({name : "users"})
 export class User extends BaseEntity {
@@ -25,6 +29,9 @@ export class User extends BaseEntity {
     
     @Column({type : "int" , nullable: true})
     verifyCode : number | null;
+
+    @Column({type : "enum" , enum : UserRole , default : UserRole.ADMIN})
+    role : UserRole;
 
 
     @OneToMany(() => Order , order => order.users)

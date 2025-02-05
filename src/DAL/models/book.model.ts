@@ -1,4 +1,4 @@
-import { BaseEntity, Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, DeleteDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Author } from "./author.model";
 import { Order } from "./order.model";
 
@@ -26,10 +26,11 @@ export class Book extends BaseEntity {
     @DeleteDateColumn({type : "datetime" , nullable : true})
     deleted_at : Date;
 
-    @ManyToOne(() => Author, (author) => author.books , {onDelete: "CASCADE"})
-    @JoinColumn({name : "author_id"})
-    authors : Author;
-
-    @OneToMany(() => Order , order => order.books)
+    @ManyToMany(() => Order)
+    @JoinTable({
+        name : "books_orders",
+        joinColumn : {name : "books_id"},
+        inverseJoinColumn : {name : "orders_id"}
+    })
     orders : Order[];
 }

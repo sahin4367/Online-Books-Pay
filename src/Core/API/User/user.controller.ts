@@ -227,10 +227,22 @@ const checkEmailCode = async(req:CustomRequest,res:Response,next:NextFunction):P
     }
 }
 
+const allUser = async(req:CustomRequest,res:Response,next:NextFunction):Promise<void> => {
+    try {
+        const users = await User.find({
+            relations : ["orders","payments"],
+        })
+        res.status(201).json(users);
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 export const userController = {
     register,
     login,
     verifyEmail,
-    checkEmailCode
-
+    checkEmailCode,
+    allUser,
 }

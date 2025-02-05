@@ -1,7 +1,9 @@
 import { Request,Response,NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { appConfig } from '../consts';
-import { User } from '../DAL/models/user.model';
+import { appConfig } from '../../consts';
+import { User } from '../models/user.model';
+
+
 
 interface JwtPayload {
     sub : number;
@@ -12,7 +14,7 @@ export const useAuth = async (req:Request,res:Response,next:NextFunction):Promis
     
     if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer")) {
         res.status(401).json({
-            message : `Token tapilmadi`
+            message : `Token not found!`
         })
         return;
     }
@@ -20,7 +22,7 @@ export const useAuth = async (req:Request,res:Response,next:NextFunction):Promis
     const access_token = req.headers.authorization.split(" ")[1];
     if (!access_token) {
         res.status(401).json({
-            message : `Token Tapilmadi!`
+            message : `Token not found!`
         })
         return;
     }

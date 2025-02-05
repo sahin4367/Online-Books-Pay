@@ -1,9 +1,8 @@
-import { User } from '../../DAL/models/user.model';
+import { User } from "../../DAL/models/user.model";
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: User; 
-        }
+declare module "express" {
+    export interface Request {
+        user?: User;
     }
 }
+

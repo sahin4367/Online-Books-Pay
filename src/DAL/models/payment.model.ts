@@ -16,12 +16,12 @@ export class Payment extends BaseEntity {
     status : EPaymentStatus;
 
     @Column({type : "varchar" , nullable : true})
-    paymentId : string; //PayPal terefinden yaradilan Payment Id -si ;
+    paymentId : string;
 
     @Column({type : "varchar" , nullable : true})
-    payerId : string; //odenisi eden istifadecinin PayPal id -si ;
+    payerId : string; 
 
-    @Column({type : "decimal" }) // precision: 10, scale: 2
+    @Column({type : "decimal" }) 
     amount : number;
 
     @Column({type:"datetime" , nullable : true})

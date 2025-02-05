@@ -1,4 +1,4 @@
-import { IsString, Length } from "class-validator";
+import { IsNumber, IsString, Length } from "class-validator";
 
 
 export class AuthorDTO {
@@ -9,4 +9,7 @@ export class AuthorDTO {
     @IsString()
     @Length(10,100)
     bio : string;
+
+    @IsNumber()
+    book_list_id : number;
 }
