@@ -1,15 +1,19 @@
-import { Request, Response, NextFunction } from "express";
-import { User, UserRole } from "../models/user.model";
+import { Response, NextFunction } from "express";
+import { UserRole } from "../models/user.model";
+import { CustomRequest } from "../../types/custome-requst";
 
-export const adminAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const user = (req as any).user as User; 
-    if (!user) {
-        res.status(401).json({ message: "Login required!" });
+export const adminAuth = async (req: CustomRequest, res: Response, next: NextFunction):Promise<void> => {
+    if (!req.user) {
+        res.status(401).json({
+            message : `Login is required~!`
+        });
         return;
     }
 
-    if (user.role !== UserRole.ADMIN) {
-        res.status(403).json({ message: "You don't have permission!" });
+    if (req.user.role !== UserRole.ADMIN) {
+        res.status(403).json({
+            message : `You don't have permission~!`
+        });
         return;
     }
 

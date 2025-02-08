@@ -4,6 +4,7 @@ import { Book } from "../../../DAL/models/book.model";
 import { title } from "process";
 import { Order } from "../../../DAL/models/order.model";
 import { In } from "typeorm";
+import { validate } from "class-validator";
 
 interface UpdateBookDTO {
     title  : string;
@@ -15,16 +16,35 @@ interface UpdateBookDTO {
 const createBook = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
     try {
         const {title,price,stock,soldCount} = req.body;
-        if (!title || !price || !stock || !soldCount ) {
-            res.status(400).json({message : `Butun melumatlari daxil et!`});
+        if (!title || !price || !stock ||!soldCount) {
+            res.status(400).json({message : `Enter is all the infomation~!`});
             return;
         }
-        
+        const dto = new BookDTO();
+        dto.title = title;
+        dto.price = price;
+        dto.stock = stock;
+        dto.soldCount = soldCount;
+
+        const errors = await validate(dto);
+        if (errors.length > 0) {
+            const formattedErrors: Record<string, string[]> = {};
+            errors.forEach(err => {
+                formattedErrors[err.property] = Object.keys(err.constraints || {});
+            });
+
+            res.status(400).json({
+                message: "Please enter correct information~!",
+                errors: formattedErrors
+            });
+            return;
+        }
+
         const book = new Book();
-        book.title = title;
-        book.price = price;
-        book.stock = stock;
-        book.soldCount = soldCount;
+        book.title = dto.title;
+        book.price = dto.price;
+        book.stock = dto.stock;
+        book.soldCount = dto.soldCount;
 
         const savedBook = await Book.save(book);
         res.status(201).json(savedBook);
@@ -53,7 +73,7 @@ const listBookId = async(req:Request,res:Response,next:NextFunction):Promise<voi
         })
         if (!book) {
             res.status(404).json({
-                message : `Book not found!`
+                message : `Book not found~!`
             })
             return;
         }
@@ -75,7 +95,7 @@ const updateBook = async(req:Request,res:Response,next:NextFunction):Promise<voi
 
         if (!book) {
             res.status(404).json({
-                message : `Book not found!`,
+                message : `Book not found~!`,
             })
             return;
         }
@@ -84,7 +104,7 @@ const updateBook = async(req:Request,res:Response,next:NextFunction):Promise<voi
 
         const updatedBook = await book.save();
         res.status(200).json({
-            message: `Book successfully updated!`,
+            message: `Book successfully updated~!`,
             book: {
                 title: updatedBook.title,
                 price: updatedBook.price,
@@ -107,13 +127,13 @@ const deleteBook = async(req:Request,res:Response,next:NextFunction):Promise<voi
         })
         if(!bookData) {
             res.status(404).json({
-                message : `Book not found!`
+                message : `Book not found~!`
             })
             return;
         }
         await Book.delete(bookId);
         res.json({
-            message : `Book whit id : ${bookId} delete saccessfully`
+            message : `Book whit id : ${bookId} delete saccessfully~!`
         })
     } catch (error) {
         next(error)
@@ -129,7 +149,7 @@ const softDeleteBook = async(req:Request,res:Response,next:NextFunction):Promise
         })
         if (!bookData) {
             res.status(404).json({
-                message : `Book not found!`,
+                message : `Book not found~!`,
             })
             return;
         }
@@ -137,7 +157,7 @@ const softDeleteBook = async(req:Request,res:Response,next:NextFunction):Promise
             isdeleted : true,
             deleted_at : new Date()
         })
-        res.json({message : `Book saccessfully deleted ! `})
+        res.json({message : `Book saccessfully deleted~! `})
     } catch (error) {
         next(error)
     }

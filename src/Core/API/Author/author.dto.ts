@@ -1,4 +1,4 @@
-import { IsNumber, IsString, Length } from "class-validator";
+import { IsArray, IsNumber, IsString, Length } from "class-validator";
 
 
 export class AuthorDTO {
@@ -10,6 +10,6 @@ export class AuthorDTO {
     @Length(10,100)
     bio : string;
 
-    @IsNumber()
-    book_list_id : number;
+    @IsArray()
+    book_list_id : number[];
 }

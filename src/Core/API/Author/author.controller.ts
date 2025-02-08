@@ -3,6 +3,7 @@ import { Author } from "../../../DAL/models/author.model";
 import { Book } from "../../../DAL/models/book.model";
 import { AuthorDTO } from "./author.dto";
 import { In } from "typeorm";
+import { validate } from "class-validator";
 
 interface UpdateAuthorDTO {
     name : string;
@@ -33,6 +34,20 @@ const createAuthor = async(req:Request,res:Response,next:NextFunction):Promise<v
         dto.bio = bio;
         dto.book_list_id = book_list_id;
 
+        const errors = await validate(dto);
+        if (errors.length > 0) {
+        const formattedErrors: Record<string, string[]> = {};
+        errors.forEach(err => {
+            formattedErrors[err.property] = Object.keys(err.constraints || {});
+                });
+        
+        res.status(400).json({
+            message: "Please enter correct information~!",
+            errors: formattedErrors
+        });
+        return;
+    };
+    
         const author = new Author();
         author.name = name;
         author.bio = bio;
@@ -105,7 +120,7 @@ const updateAuthor = async(req:Request,res:Response,next:NextFunction):Promise<v
     }
 }
 
-//hard delete :
+
 const deleteAuthor = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
     try {
         const authorId = Number(req.params.id);
@@ -128,7 +143,6 @@ const deleteAuthor = async(req:Request,res:Response,next:NextFunction):Promise<v
     }
 }
 
-//soft-delete : 
 const softDeleteAuthor = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
     try {
         const authorId = Number(req.params.id);

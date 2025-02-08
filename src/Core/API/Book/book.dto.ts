@@ -14,6 +14,6 @@ export class BookDTO {
     @IsNumber()
     soldCount : number;
 
-    @IsNumber()
-    orders_list_id : number;
+    // @IsNumber() |~~ Biznes!
+    // orders_list_id : number;
 }

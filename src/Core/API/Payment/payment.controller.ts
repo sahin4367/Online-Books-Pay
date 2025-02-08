@@ -101,37 +101,3 @@ export const paymentController = {
     createPayment,
     executePayment
 }
-
-// const makePayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-//     try {
-//         const { userId, orderId} = req.body;
-//         const dto = new PaymentDTO();
-//         dto.userId = userId;
-//         dto.orderId = orderId;
-
-//         const errors = await validate(dto);
-//         if (errors.length > 0) {
-//             res.status(400).json({ message: "Validation failed", errors });
-//             return;
-//         }
-
-//         const user = await User.findOne({ where: { id: userId } });
-//         const order = await Order.findOne({ where: { id: orderId } });
-
-//         if (!user || !order) {
-//             res.status(404).json({ message: "User or Order not found" });
-//             return;
-//         }
-
-//         const payment = new Payment();
-//         payment.users = user;
-//         payment.orders = order;
-//         payment.status = ESTATUS.PENDING;
-
-//         await payment.save();
-
-//         res.status(201).json(payment);
-//     } catch (error: any) {
-//         next(error);
-//     }
-// };

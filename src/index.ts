@@ -19,7 +19,7 @@ const app = express();
 app.use(cors())
 app.use(express.json());
 
-//error - middleware
+
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(error);
     res.status(500).json({ error });

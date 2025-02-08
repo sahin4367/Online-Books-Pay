@@ -1,15 +1,14 @@
-import { Request,Response,NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { appConfig } from '../../consts';
 import { User } from '../models/user.model';
-
-
+import { CustomRequest } from '../../types/custome-requst';
 
 interface JwtPayload {
     sub : number;
 }
 
-export const useAuth = async (req:Request,res:Response,next:NextFunction):Promise<void> => {
+export const useAuth = async (req:CustomRequest,res:Response,next:NextFunction):Promise<void> => {
     console.log("useAuth middleware" , useAuth);
     
     if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer")) {
@@ -34,12 +33,12 @@ export const useAuth = async (req:Request,res:Response,next:NextFunction):Promis
         const user = await User.findOneBy({ id : parseInt(payload.sub.toString(), 10)});
         if (!user) {
             res.status(404).json({
-                message : `User not found`
+                message : `User not found~!`
             })
             return;
         }
 
-        (req as any).user = user;
+        req.user = user;
         next();
 
     } catch (error : any) {
