@@ -9,7 +9,7 @@ const createPayment = async(req:Request,res:Response,next:NextFunction):Promise<
     try {
         const { orderId } = req.body;
 
-        const order = await Order.findOne({ where: { id: orderId }, relations: ["users"] }); //////usersi unutma!
+        const order = await Order.findOne({ where: { id: orderId }, relations: ["users"] }); 
         if (!order) {
             res.status(404).json({ message: "Sifariş tapılmadı!" });
             return;
@@ -30,15 +30,15 @@ const createPayment = async(req:Request,res:Response,next:NextFunction):Promise<
                 total: order.totalPrice.toFixed(2),
                 currency: "USD",
             },
-            description: `Sifariş #${order.id} üçün ödəniş`,
+            description: `Payment for order #${order.id}`,
         },
         ],
     };
 
     paypal.payment.create(paymentData, async (error, payment) => {
         if (error) {
-            console.error("PayPal erroru : ",  error.response);
-            res.status(500).json({ message: "Ödəniş yaradılmadı!" });
+            console.error("PayPal is error : ",  error.response);
+            res.status(500).json({ message: "Payment not created!" });
             return;
         }
 
